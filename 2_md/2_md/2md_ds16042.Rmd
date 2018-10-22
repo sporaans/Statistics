@@ -1,0 +1,270 @@
+---
+title: "DatZ6057 : Matemātiskās statistikas izvēlētas nodaļas"
+
+output: html_notebook
+---
+
+2.mājas darbs, Dāvis Sporāns DS16042
+
+8.lekcija
+
+
+1. uzdevums
+
+Amerikas Automobiļu Asociācija publicēja datus (Defensive Driving:Managing Time and Space, 1991), kur analizē atkarību starp vidējo apstāšanos laiku (y = distance, in feet) mašīnas ātrumu (x = speed, in miles per hour). Dati carstopping.txt satur 63 novērojumus. Vai determinācijas koeficients R2 ir nozīmīgs ar lielu vērtību? Vai regresijas lineārā taisne labi pieguļ datu punktiem?
+
+Ielasa datus un veic aprakstošo analīzi.
+```{r}
+dati<-read.table(file="carstopping.txt",header=T)
+
+attach(dati)
+fit<-lm(StopDist~Speed)
+summary(fit)
+```
+Determinācijas koeficients  0.8752
+Regresijas koeficienti nozīmīgi un arī f-tests norāda uz nozīmību
+```{r}
+# regresijas lineārā taisne
+plot(Speed,StopDist)
+abline(fit)
+```
+Lineārā regresijas taisne labi pieguļ datu punktiem. Aptuveni 88% no kopējās dispersijas izskaidrots ar
+vienkāršās lineārās regresijas palīdzību.
+```{R}
+detach(dati)
+```
+
+2. uzdevums
+
+Aplūkosim sekojošus datus practical.txt. Veikt lineāro regresijas
+analīzi: novērtēt koeficientus, pārbaudīt vai tie ir statististki nozīmīgi, aprēķināt
+determinācijas koeficientu R2, aprēķināt ticamības intervālus regresijas koeficientiem.
+Vai 0 ietilpst ticamības intervālā slīpuma koeficientam b? Vai b ir
+statistiski nozīmīgs? Komentēt: kāpēc šāda pretruna: lai gan slīpuma koeficients
+b ir tuvu nullei, tomēr tas ir statistiski nozīmīgs.
+
+Ielasa datus un uzzīmē izkliedes garfiku, novelk regresijas taisni.
+```{R}
+dati2<-read.table(file="practical.txt",header=T)
+
+attach(dati2)
+
+plot(x,y)
+fit2<-lm(y~x)
+abline(fit2)
+```
+
+```{R}
+summary(fit2)
+```
+Koeficienti statistiski nozīmīgi.
+
+Determinācijas koeficients:  0.243
+
+Slīpuma koeficients: 0.099
+
+Lai gan slīpuma koeficents nav liels, bet ja vien koeficients nav 0, tad tā statistikso nozīmību neietekmē tā vērtība.
+```{R}
+tic_int<-confint(fit2, level = 0.95);tic_int
+```
+Slīpuma koeficienta ticamības inervāls: [0.08885531 0.1107403], tajā neietilpst 0.
+```{R}
+detach(dati2)
+```
+9.lekcija
+
+1. uzdevums
+
+Ielasīt programmā R datus CMB. Līdzīgi kā lekcijā veikt lineārās un polinomiālās
+regresijas analīzi. Pārbaudīt ar ANOVA palīdzību, kura kārta polinomiālajai
+regresijai būtu piemērota. Veikt atlikumu analīzi līdzīgi kā lekcijā.
+
+Ielasa datus, uzzīmē izkliedes grafiku un regresijas taisni.Veic aprakstošo analīzi.
+```{R}
+#detach(dati)
+library(car)
+dati<-read.table("cmb.txt", header=T)
+attach(dati)
+plot(Cl~ell)
+fit1<-lm(Cl~ell)
+abline(fit1,col="red",lwd=2)
+```
+```{R}
+summary(fit1)
+```
+Koeficienti nozīmīgi, tomēr mazs determinācijas koeficients (0.009911), tas nozīmē, ka lineārais modelis slikti paskaidro datus.
+```{R}
+plot(fit1$residuals)
+```
+Tā kā regresijas taisnei ir mazs slīpuma koeficients atlikumu grafiks ir līdzīgs oriģinālajam.
+```{R}
+acf(fit1$residuals)
+durbinWatsonTest(fit1,max.lag = 5)
+```
+ACF atlikumu grafiks uzrāda kolerāciju. Arī Durbina-Watsona tests norāda uz autokerelāciju (p-vertiba>0.05).
+
+Polinomiālās regresijas analīze.
+```{R}
+fit1<-lm(Cl~poly(ell,degree=2,raw=T))
+fit2<-lm(Cl~poly(ell,degree=3,raw=T))
+summary(fit2)
+anova(fit1,fit2)
+```
+Nozīmīgu uzlabojumu dod 3 pakāpēs regresijas modelis, kas uzlabo determinācijas koeficientu uz 0.09644, tomēr arī tas ir relatīvi mazs, jo pieaug datu izkliede, kad ell>600. Augstākas pakāpes regresijas modeļi nedod vērā ņemamu uzlabojumu.
+Anova tests norāda uz statistiski nozīmīgu uzlabojumu salīdzinot ar kvadrātisko regresijas modeli (p-vērt<0.05).
+```{R}
+plot(Cl~ell)
+lines(sort(ell), fitted(fit2)[order(ell)], col='red', lwd=2)
+```
+```{R}
+acf(fit2$residuals)
+durbinWatsonTest(fit2,max.lag = 5)
+detach(dati)
+```
+Tāpat kā lineārās regresijas atlikumi, arī 3 pakāpēs polinomiālais regresijas modeļa atlikumi pēc Durbina Watsona testa uzrāda autokoleriāciju pie laga 1 (p-vērtība>0.05). Arī ACF grafiks uzrāda kolerāciju, bet ne tik izteikti, kā lineārajam modelim. 
+
+
+2. uzdevums
+
+Ielasīt programmā R datus LifeCycleSavings, kas raksturo ietaupījumu
+attiecību pret ienākumiem atkarībā no pieciem faktoriem. Līdzīgi kā
+otrajā uzdevumā veikt daudzfaktoru lienāro regresijas analīzi. Novērtēt arī atbilstošās
+korelācijas. Pārbaudīt modeļa nosacījumus, veikt diagnostiku, apskatīt
+mainīgo selekcijas problēmu. Veikt atbisltošus secinājumus.
+
+Ielasa datus, aplūko kolerācijas.
+```{R}
+attach(LifeCycleSavings)
+cor(LifeCycleSavings , method="kendall")
+```
+Modelis neuzrāda būtiskas koeficientu kolerācijas savā starpā.
+```{R}
+fit<-lm(sr~.,data=LifeCycleSavings)
+summary(fit)
+```
+Koeficients 'dpi' vismazāk nozīmīgs. Izņem to no modeļa un novērtē, vai ir uzlabojums.
+```{R}
+fit1<-lm(sr ~ pop15 + pop75 + ddpi, data = LifeCycleSavings)
+summary(fit1)
+anova(fit,fit1)
+```
+Pēc Anova testa p-vertiba>0.05, tāpēc nav vērā ņemama statiskā uzlabojuma. 
+Arī determinācijas koeficients ir samazinājies .Tomēr keficienti statisti nozīmīgi, izņemot pop75,
+kura nozīmīgumu var apšaubīt (p-vērt=0.07).
+
+
+10.lekcija
+
+1. uzdevums
+
+Aplūkot asinspiediena datus bloodpress.txt. Veikt daudzfaktoru
+regresiju, atlasot mainīgos (ievērojot multikolinearitāti) un veicot attiecīgo regresijas
+diagnostiku. Vai šeit ir nozīmīga mijiedarbība starp faktoriem?
+
+
+Ielasa datus un veic modeļa aprakstošo analīzi.
+```{R}
+dati<-read.table("bloodpress.txt",header=T)
+dati1<-dati[,-1]
+attach(dati1)
+
+fit<-lm(BP~.,data=dati1)
+summary(fit)
+
+```
+Determinācijas koeficients  = 99%, arī t-tests uzrāda statisku nozīmību, tomēr ne visi koeficienti ir statistiksi nozīmīgi.
+```{R}
+library(car)
+sort(vif(fit)) #weight pārsniedz 4 (vif=8), aizdomas par multikolirinitāti
+#cor(dati1)[1,]
+```
+Veicot VIF, weight pārsniedz 4 (vif=8.417035), ir aizdomas par multikolirinitāti. No modeļa izņem weight un novēro, vai tas dod uzlabojumu.
+```{R}
+fit1<-lm(BP~.,data=dati1[,-3]) #modelis bez weight
+summary(fit1)
+sort(vif(fit1))
+```
+Būtisks uzlabojums nav novērojams, tomēr visi VIF koeficienti ir mazāki par 4, tāpēc dispersija nav ietekmēta.
+```{R}
+step(fit1)
+```
+Izmantojot mainīgo selekciju ar AIC, izvēlēts modelī neiekļaut arī mainīgo Dur.
+
+```{R}
+fit2<-lm(formula = BP ~ Age + BSA + Pulse + Stress, data = dati1) 
+summary(fit2) 
+```
+Iegūts piemērotākais modelis ar determinācijas koeficientu = 0.9255, visi mainīgie nozīmīgi, izņemot Stress.
+```{R}
+fitm<-lm(BP ~ Age * BSA * Pulse * Stress, data = dati1)
+summary(fitm)
+```
+Iegūtajam modelim netiek novērota savstarpējā mainīgo mijiedarbība.
+
+
+2. uzdevums
+
+Veikt ANOVA analīzi datiem, kurus izmantojām kontroldarbā par
+bērnu lasītprasmi. Pamatot ar Tukey post-hoc testa analīzi, no kura vecuma bērnu
+lasītprasme vairs nemainās.
+
+Ielasa datus un uzzīmē kastu garfikus.
+```{R}
+dati<-read.csv("dati_lasitprasme.csv", header=TRUE, stringsAsFactors = FALSE)
+names_dat<-c("Dzimums","VardiMin","TMTA","TMTB","Vecums")
+names(dati)<-names_dat
+
+attach(dati)
+boxplot(VardiMin~Vecums)
+```
+Izveido modeli, kas apskata vārdus/minūtē pret vecumu un veic aprakstošo analīzi.
+```{R}
+fit<-aov(VardiMin~as.factor(Vecums))
+summary(fit)
+```
+Visām vecuma grupām vidējā vērtiba nav vienāda (p-vērt<0.05), veic Tukey post-hoc testa analīzi, lai noskaidrotu, no kura vecuma lasītprasmes ātrums nemainās. 
+```{R}
+plot(TukeyHSD(fit)) 
+TukeyHSD(fit)
+```
+Pēc grafika un rezultātiem var secināt ,ka lasītprasme ir vienāda starp 6 un 7 gadu vecuma bērniem un sākot no 12 gadu vecuma, kuriem 0 ietilpst ticamības intervālos Tukey post-hoc testa analīzē.
+
+
+11.lekcija
+
+1. uzdevums 
+
+Optometru datiem par bērnu lasītprasmi (kas izmantoti eksāmenā
+un ielikti serverī) veikt ANOVA analīzi, aizstājot novērojumus ar viņu rangiem.
+Pārbaudīt, no kura vecuma (un klases) lasītprasme vairs statistiski nozīmīgi neat-
+šķiras. Parādīt tabulas formā iegūtās Tukey post-hoc testa p-vērtības un salīdzināt,
+kur ir iegūtas lielākās atšķirības ar klasisko ANOVA analīzi.
+
+```{R}
+kruskal.test(VardiMin,Vecums)
+```
+Kruskal tests uzrāda. ka vidējās vērtības pa rangiem nav vienādas (p-vērt<0.05), salīdzina rangus pa pāriem izmantojot R pakotnes PMCMR funkciju posthoc.kruskal.nemenyi.test.
+```{R}
+require(PMCMR)
+post_hoc<-posthoc.kruskal.nemenyi.test(x=VardiMin, g=Vecums, dist="Tukey")
+post_hoc$p.value 
+```
+Lasītprasme nemainās pāriem, kuriem p-vērtība>0.05. Analizējot rezultātus tie ir vecumi no 6-9 gadi un sākot no 10 gadiem. 
+
+2. uzdevums
+
+Aprakstīt CMB datus no Larry Wasserman mājaslapas. Veikt polinomiālo
+un neparametrisko regresiju. Pārbaudīt nosacījumus, veikt diagnostiku.
+Izdarīt attiecīgus secinājumus.
+
+Ielasa datus un uzzīmē izkliedes grafiku.
+```{R}
+dati<-read.table("cmb.txt", header=T)
+attach(dati)
+plot(Cl~ell)
+library(KernSmooth)
+h<-dpill(ell,Cl) # h novērtēšanas metode
+fit<-locpoly(ell,Cl,degree=0,bandwidth=h)
+lines(fit,col="red",lwd=2)
+```
+Polinomiālā regresija šiem datiem tika veikta 9. lekcijas 1. uzdevumā, kur noskaidrojām, ka polinomiālā regresija nav piemērota lai paskaidrotu datus. Salīdzniot ar polinomiālo regresiju neparametriskā regresija dod uzlabojumu tieši robežās, kur iespējams prognozēt datus.

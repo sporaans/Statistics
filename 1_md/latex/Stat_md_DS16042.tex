@@ -1,0 +1,146 @@
+\documentclass[a4paper,10pt]{article}
+
+% XeLaTeX atbalsts tiek pieslegts ar sadam pakotnem:
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra} %
+
+% Valodu atbalsts
+\usepackage{polyglossia}
+\setdefaultlanguage{latvian}
+\setotherlanguages{english,russian}
+
+%Bez atstaprem itemize vai enummurate
+
+\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
+
+
+%Math u.c. package
+\usepackage{amsfonts,amssymb,amsthm,mathtools, fontspec,xunicode, xltxtra, setspace, enumerate, graphicx, polyglossia, secdot, titlesec}
+
+% Fonti -- var rakst?t sist?mas fontu nosaukumus
+%\setmainfont[Mapping=tex-text]{Times New Roman}
+%\setsansfont[Mapping=tex-text]{Arial}
+%\newfontfamily\russianfont{Times New Roman}
+\newtheorem{theorem}{Lemma}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Dāvis Sporāns, DS16042}
+\lhead{\textit{Matemātikas Statistikas izvēlētas nodaļas}}
+%\rfoot{Page \thepage}
+\cfoot{\thepage }
+
+\begin{document}
+
+\section{Teorētiskie uzdevumi}
+\subsection*{1. uzdevums}
+\textit{Pieņemsim, ka tiek mesti divi spēļu kauliņi. Kā
+izskatās elementāru notikumu telpa? Definēsim sekojošus
+notikumus:
+\begin{enumerate}
+\item $A= \{  \text{abi skaitļi vienādi} \}$ 
+\item $B = \{ \text{summa starp $7$ un $10$} \}$ 
+\item $C = \{ \text{summa ir $2$, $7$ vai $8$} \}$.
+\end{enumerate}
+Aprēķināt:
+\begin{enumerate}
+	\item $P(A), P(B)$ un $P(C)$
+	\item Vai $P(A\cap B \cap C) = P(A)P(B)P(C)$?
+	\item Vai $A$ un $B$ ir neatkarīgi notikumi? Vai $B$ un $C$ ir neatkarīgi notikumi?
+\end{enumerate}}
+Atrisinājums:
+Elementāru notikumu telpa ir visas iespējamās kauliņu kombinācijas $\Omega=\{\omega_{11},\omega_{12},..,\omega_{66}\}$
+\begin{enumerate}
+	\item $P(A)=P(\{\omega_{11},\omega_{22},..,\omega_{66}\})=\dfrac{6}{36}=\dfrac{1}{6}$\\
+		  $P(B)=P(\{\omega_{16},\omega_{61},...\})=\dfrac{18}{36}=\dfrac{1}{2}$\\
+		  $P(C)=P(\{\omega_{11},\omega_{16},...\})=\dfrac{12}{36}=\dfrac{1}{3}$
+	\item $P(A\cap B \cap C) = \dfrac{1}{36}$\\
+		  $P(A)P(B)P(C) = \dfrac{1}{36}$\\
+	\item Ja $A$ un $B$ ir neatkarīgi notikumi, tad $P(A \cap B) = P(A)P(B)$\\
+		  $P(A\cap B)= \dfrac{1}{18}, P(A)P(B)=\dfrac{1}{12}$, tāpēc $A$ un $B$ nav neatkarīgi notikumi
+		  $P(B\cap C)= \dfrac{11}{36}, P(C)P(B)=\dfrac{1}{6}$, tāpēc $A$ un $B$ nav neatkarīgi notikumi		  
+\end{enumerate}
+
+\subsection*{2. uzdevums}
+\textit{Met trīs spēļu kauliņus. Aprēķināt varbūtību, ka vismaz uz viena no tiem uzkritīs vieninieks, pie nosacījuma,
+ka uz visiem kauliņiem ir uzkrituši dažādi skaitļi.}
+\\ \\
+Atrisinājums:\\
+Labvēlīgo notikumu skaits: $3*(1*5*4)=60$\\
+Iespējamo notikumu skaits: $6*5*4=120$\\
+Varbūtība: $P=\dfrac{60}{120}=\dfrac{1}{2}$
+
+\subsection*{3. uzdevums}
+\textit{\begin{enumerate}[nosep]
+	\item Aprēķināt varūtību, ka strāva plūst shēmā, ja katras spuldzītes degšanas (strādāšanas) varbūtība ir $p=0.5$
+	\item Aprēķināt varbūtību, ka strāva plūst shēmā, ja zināms, ka 
+	\begin{enumerate}
+	\item $a_1$ spuldzīte strādā
+	\item $b$ spuldzīte strādā
+	\item $c$ spuldzīte strādā.
+	\end{enumerate}
+	\item Aprēķinātt varbūtību, ka $b$ spuldzīte strādā, ja zināms, ka strāva shēmā plūst (nosacītā varbūtība).
+\end{enumerate}}
+
+Atrisinājums:
+\begin{enumerate}
+	\item $P(A_{1}\cup A_{2})=1-P(\overline{A_{1}\cup A_{2}})=1-P(\overline{A_{1}}\cup \overline{A_{2}})
+	=1-P(\overline{A_{1}})P(\overline{A_{2}})=1-(1-P(\overline{A_{1}}))(1-P(\overline{A_{2}}))=1-(1-x)^2=x(2-x)\equiv P(A)$\\
+	$P(A \cap B)=P(A)P(B)=x^2 (2-x) \equiv P(D)$\\
+	$P(D \cup C)=1-(1-x^2(2-x))(1-x)\approx0.688$
+	\item
+	\begin{enumerate}
+		\item Ja $P(A_1)=1$, tad $P(A)=1$\\
+		$P(A\cap B)=P(A)P(B)=P(B)$\\
+		$P(D\cup C)= 1-(1-P(B)(1-P(C))=0.75 \equiv P(S|A_1)$
+		\item $P(D\cup C)=1-(1-x(2-x))(1-x)=0.875 \equiv P(S|B)$
+		\item Ja $P(C)=1$, tad $P(S|C)=1$
+	\end{enumerate}
+	\item No iepriekšējiem punktiem zināms: \\
+	$P(S)=0.688, P(B)=0.5, P(S|B)=0.875$\\
+	Atrisinājums:\\
+	$P(S|B)=\dfrac{P(B\cap S)}{P(B)} \Rightarrow P(B\cap S)=P(B)P(S|B) \approx0.438$\\
+	$P(B|S)=\dfrac{B\cap S}{P(S)}\approx0.636$	
+\end{enumerate}
+
+\subsection*{4. uzdevums}
+\textit{Pieņemsim, ka X ir nepārtraukts gadījuma
+lielums ar blīvuma funkciju
+$$f(x)=exp(-(x+2))\text{,ja }-2<x<\infty \text{ un citur }0$$
+Aprēķināt momentu ģenerējošo funkciju, $EX$ un $DX^2$\\}
+
+Atrisinājums:
+\begin{align*}
+M_X(t)&=\int_{-2}^{+\infty}e^{tx}e^{-(x+2)}dx=\frac{e^{(t-1)x-2}}{t-1}\bigg\vert_{-2}^{+\infty}=\frac{e^{-2t}}{1-t}
+\\EX&=\frac{d}{dt}M_X(t)\bigg\vert_{t=0}=\frac{e^{-2t}(2t-1)}{(1-t)^2}\bigg\vert_{t=0}=-1
+\\DX^2&=EX^4-(EX^2)^2
+\\EX^2&=\frac{d^2}{dt^2}M_X(t)\vert_{t=0}=\frac{-2e^{-2t}(2t^2-2t+1)}{(1-t)^3}\bigg\vert_{t=0}=2
+\\EX^4&=\frac{d^4}{dt^4}M_X(t)\vert_{t=0}=\frac{8e^{-2t}(2t^4-4t^3+6t^2-2t+1)}{(1-t)^5}\bigg\vert_{t=0}=8
+\\DX^2&=8-(2^2)=4
+\end{align*}
+
+\subsection*{5. uzdevums}
+\textit{$X1, X2, . . . , Xn$ ir gadījuma izlase, $Xi ∼ exp(\lambda)$.
+Atrast maksimālās ticamības funkcijas novērtējumu
+parametram $\lambda$! Vai iegūtais novērtējums ir nenovirzīts?}
+
+
+Blīvuma funkcija eksponenciālajam sadalījumam
+\begin{align*}
+f(\lambda)\begin{cases}1-e^{-\lambda X} &X\geq 0\\ 0 &X<0 \end{cases}
+\end{align*}
+Atrisinājums:
+\begin{align*}
+L(\lambda|X)&=\prod^n_{i=1}f(X_i|\lambda)=\lambda^ne^{-\lambda\sum_{i=1}^nX_i}\\
+lnL(\lambda)&=ln\lambda^n-\lambda \sum_{i=1}^nX_i=nln\lambda-\lambda\sum_{i=1}^nX_i\\
+\frac{dlnL(\lambda)}{d\lambda}&=\frac{n}{\hat{\lambda}}-\sum_{i=1}^nX_i=0\Rightarrow \hat{\lambda}= \frac{n}{\sum_{i=1}^nX_i}
+\end{align*}
+
+%\section{Praktiskie uzdevumi}
+%\subsection*{3. uzdevums}
+
+
+\end{document}
